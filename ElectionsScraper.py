@@ -41,7 +41,7 @@ def extract_party_table(table_parties) -> Dict[str,int]:
     return party_dict
 
 
-def extract_result_page(parsed_text: BeautifulSoup) -> Dict[str, int]:
+def parse_result_page(parsed_text: BeautifulSoup) -> Dict[str, int]:
     tables = parsed_text.find_all("table")
     overall_dict = extract_overall_data(tables[0])
     party_votes_dict = {}
@@ -64,3 +64,14 @@ def parse_region_page(parsed_text: BeautifulSoup) -> List[Dict[str, str]]:
             county_dict["url"] = cells[2].a["href"]
             counties_list.append(county_dict)
     return counties_list   
+
+
+def parse_url_county_page(parsed_text: BeautifulSoup) -> List[str]:
+    table = parsed_text.find("table")
+    cells = table.find_all("td")
+    url_list = []
+    for cell in cells:
+        a_tag = cell.find("a")
+        if a_tag is not None:
+            url_list.append(a_tag.get("href"))
+    return url_list
