@@ -8,7 +8,9 @@ discord: Míša H.#5316
 import requests
 from bs4 import BeautifulSoup
 import unicodedata
-from typing import Dict, List
+from typing import Dict, List, Tuple
+import sys
+
 
 
 def extract_number_from_cell(cell) -> int:
@@ -75,3 +77,22 @@ def parse_url_county_page(parsed_text: BeautifulSoup) -> List[str]:
         if a_tag is not None:
             url_list.append(a_tag.get("href"))
     return url_list
+
+
+def read_input() -> Tuple[str, str]:
+    if len(sys.argv) != 3:
+        print("Incorrect number of parameters.")
+        print("Please, provide 2 parameters.")
+        sys.exit()
+    url = sys.argv[1]
+    csv_name = sys.argv[2]
+    if not csv_name.endswith(".csv"):
+        print("Second parameters should be a .csv file name.")
+        sys.exit()
+    return url, csv_name
+
+if __name__== "__main__":
+    url, csv_name = read_input()
+    print(url)
+    print(csv_name)
+    
