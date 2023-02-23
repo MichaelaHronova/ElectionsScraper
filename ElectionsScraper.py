@@ -10,7 +10,17 @@ from bs4 import BeautifulSoup
 import unicodedata
 from typing import Dict, List, Tuple
 import sys
+from pprint import pprint
+import pandas as pd 
 
+
+
+def parse_url_to_bs(url: str) -> BeautifulSoup:
+    respond = requests.get(url)
+    if respond.status_code != 200:
+        raise ValueError(f"Invalid url - {url}")
+    parsed_text = BeautifulSoup(respond.text, "html.parser")
+    return parsed_text
 
 
 def extract_number_from_cell(cell) -> int:
@@ -21,12 +31,12 @@ def extract_number_from_cell(cell) -> int:
 
 def extract_overall_data(table_overall) -> Dict[str, int]:
     rows = table_overall.find_all("tr")
-    row_data = rows[2]
+    row_data = rows[-1]
     data = row_data.find_all("td")
     overall_dict = {}
-    overall_dict["registered"] = extract_number_from_cell(data[3])
-    overall_dict["envelopes"] = extract_number_from_cell(data[4])
-    overall_dict["valid"] = extract_number_from_cell(data[7])
+    overall_dict["registered"] = extract_number_from_cell(data[-6])
+    overall_dict["envelopes"] = extract_number_from_cell(data[-5])
+    overall_dict["valid"] = extract_number_from_cell(data[-2])
     return overall_dict
 
 
@@ -43,7 +53,8 @@ def extract_party_table(table_parties) -> Dict[str,int]:
     return party_dict
 
 
-def parse_result_page(parsed_text: BeautifulSoup) -> Dict[str, int]:
+def parse_result_page(url: str) -> Dict[str, int]:
+    parsed_text = parse_url_to_bs(url)
     tables = parsed_text.find_all("table")
     overall_dict = extract_overall_data(tables[0])
     party_votes_dict = {}
@@ -53,7 +64,20 @@ def parse_result_page(parsed_text: BeautifulSoup) -> Dict[str, int]:
     return overall_dict    
 
 
-def parse_region_page(parsed_text: BeautifulSoup) -> List[Dict[str, str]]:
+def parse_location_url(url: str, base_url: str) -> Dict[str, int]:
+    if "xvyber" in url:
+        return parse_result_page(base_url + url)
+    url_list = parse_url_county_page(base_url + url)
+    result_dict = parse_result_page(base_url + url_list[0])
+    for url_county in url_list[1:]:
+        county_dict = parse_result_page(base_url + url_county)
+        for key in result_dict.keys():
+            result_dict[key] += county_dict[key]
+    return result_dict
+
+
+def parse_region_page(url: str) -> List[Dict[str, str]]:
+    parsed_text = parse_url_to_bs(url)
     tables = parsed_text.find_all("table")
     counties_list = []
     for table in tables:
@@ -68,7 +92,8 @@ def parse_region_page(parsed_text: BeautifulSoup) -> List[Dict[str, str]]:
     return counties_list   
 
 
-def parse_url_county_page(parsed_text: BeautifulSoup) -> List[str]:
+def parse_url_county_page(url: str) -> List[str]:
+    parsed_text = parse_url_to_bs(url)
     table = parsed_text.find("table")
     cells = table.find_all("td")
     url_list = []
@@ -91,8 +116,19 @@ def read_input() -> Tuple[str, str]:
         sys.exit()
     return url, csv_name
 
+
 if __name__== "__main__":
     url, csv_name = read_input()
-    print(url)
-    print(csv_name)
-    
+    base_url = url.rsplit("/", maxsplit=1)[0] + "/"
+    village_list = parse_region_page(url)
+    for village_dict in village_list:
+        village_url = village_dict.pop("url")
+        print(f"{village_dict['location']}")
+        village_total_results = parse_location_url(village_url, base_url)
+        for key in village_total_results.keys():
+            village_dict[key] = village_total_results[key]
+
+    df = pd.DataFrame.from_records(data=village_list)
+    df.to_csv(csv_name, sep=",")
+    print(f"Data written to file {csv_name}")
+
