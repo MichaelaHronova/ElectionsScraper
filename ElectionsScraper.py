@@ -10,9 +10,7 @@ from bs4 import BeautifulSoup
 import unicodedata
 from typing import Dict, List, Tuple
 import sys
-from pprint import pprint
-import pandas as pd 
-
+import pandas as pd
 
 
 def parse_url_to_bs(url: str) -> BeautifulSoup:
@@ -123,7 +121,7 @@ if __name__== "__main__":
     village_list = parse_region_page(url)
     for village_dict in village_list:
         village_url = village_dict.pop("url")
-        print(f"{village_dict['location']}")
+        print(f"Getting results from: {village_dict['location']}")
         village_total_results = parse_location_url(village_url, base_url)
         for key in village_total_results.keys():
             village_dict[key] = village_total_results[key]
