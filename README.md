@@ -3,8 +3,10 @@ Program umožňuje vybrat jakýkoliv územní celek z odkazu (https://www.volby.
 
 ## Instalace
 
-1. Nejdřív stáhněte program z GitHubu příkazem `git clone https://github.com/MichaelaHronova/ElectionsScraper.git`
+Instalace se provádí z příkazové řádky.
 
+1. Nejdřív stáhněte program z GitHubu příkazem `git clone https://github.com/MichaelaHronova/ElectionsScraper.git`
+3. Příkazem `cd ElectionsScraper` se přesuňte do nově vytvořené složky.
 2. Před samotným spuštěním programu je potřeba následujícím příkazem vytvořit virtuální prostředí `python -m venv venv`
 3. Vytvořené virtuální prostředí se aktivuje příkazem `source venv/bin/activate` 
 4. Dále je zapotřebí nainstalovat knihovny uvedené v souboru requirements.txt., a to příkazem `pip install -r requirements.txt`
