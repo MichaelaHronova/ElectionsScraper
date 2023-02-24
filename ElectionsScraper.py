@@ -127,6 +127,6 @@ if __name__== "__main__":
             village_dict[key] = village_total_results[key]
 
     df = pd.DataFrame.from_records(data=village_list)
-    df.to_csv(csv_name, sep=",")
+    df.to_csv(csv_name, sep=",", index=False)
     print(f"Data written to file {csv_name}")
 

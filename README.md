@@ -3,7 +3,7 @@ Program umožňuje vybrat jakýkoliv územní celek z odkazu (https://www.volby.
 
 ## Instalace
 
-1. Nejdřív stáhněte program z GitHubu `git clone https://github.com/MichaelaHronova/ElectionsScraper.git`
+1. Nejdřív stáhněte program z GitHubu příkazem `git clone https://github.com/MichaelaHronova/ElectionsScraper.git`
 
 2. Před samotným spuštěním programu je potřeba následujícím příkazem vytvořit virtuální prostředí `python -m venv venv`
 3. Vytvořené virtuální prostředí se aktivuje příkazem `source venv/bin/activate` 
@@ -13,8 +13,8 @@ Program umožňuje vybrat jakýkoliv územní celek z odkazu (https://www.volby.
 ## Spouštění
 
 Program se spouští dvěma argumenty, a sice 
-1) odkazem, z něhož má program extrahovat data (např.: https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=11&xnumnuts=6207)
+1) odkazem v uvozovkách, z něhož má program extrahovat data (např.: https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=11&xnumnuts=6207)
 2) jménem výstupního souboru s příponou .csv (např. `vysledky_znojmo.csv`).
 
-Příklad: `python ElectionsScraper.py https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=11&xnumnuts=6207 vysledky_znojmo.csv`
+Příklad: `python ElectionsScraper.py 'https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=11&xnumnuts=6207' vysledky_znojmo.csv`
  
