@@ -45,9 +45,10 @@ def extract_party_table(table_parties) -> Dict[str,int]:
         row_cells = row.find_all("td")
         party_cell = row_cells[1]
         party_name = party_cell.text
-        votes_cell = row_cells[2]
-        votes_count = extract_number_from_cell(votes_cell)
-        party_dict[party_name] = votes_count
+        if party_name != "-":
+            votes_cell = row_cells[2]
+            votes_count = extract_number_from_cell(votes_cell)
+            party_dict[party_name] = votes_count
     return party_dict
 
 
@@ -83,10 +84,11 @@ def parse_region_page(url: str) -> List[Dict[str, str]]:
         for row in rows[2:]:
             county_dict = {}
             cells = row.find_all("td")
-            county_dict["code"] = cells[0].text
-            county_dict["location"] = cells[1].text
-            county_dict["url"] = cells[2].a["href"]
-            counties_list.append(county_dict)
+            if cells[0].text.isnumeric():
+                county_dict["code"] = cells[0].text
+                county_dict["location"] = cells[1].text
+                county_dict["url"] = cells[2].a["href"]
+                counties_list.append(county_dict)
     return counties_list   
 
 
